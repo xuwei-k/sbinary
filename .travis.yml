@@ -1,3 +1,6 @@
+# Use container-based build
+sudo: false
+
 language: scala
 
 script:
