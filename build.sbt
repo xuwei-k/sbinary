@@ -9,7 +9,8 @@ lazy val root = (project in file(".")).
     inThisBuild(Seq(
       organization := "org.scala-tools.sbinary",
       version := "0.4.3-SNAPSHOT",
-      scalaVersion := "2.10.6"
+      scalaVersion := "2.10.6",
+      crossScalaVersions := Seq("2.10.6", "2.11.7")
     )),
     name := "SBinary Parent",
     publish := (),
