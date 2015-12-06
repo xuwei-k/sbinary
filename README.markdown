@@ -4,20 +4,23 @@ It started out life as a loose port of Haskell's Data.Binary. It's since evolved
 
 SBinary was written by David MacIver.  You can find his introduction here: http://code.google.com/p/sbinary/wiki/IntroductionToSBinary.
 
-= Getting SBinary =
+### Getting SBinary
 
-SBinary is in the Scala Tools Repository.  If you are using sbt with Scala 2.7.7:
-  val sbinary = "org.scala-tools.sbinary" %% "sbinary" % "0.3"
+SBinary is in the Typesafe Ivy Repository.  If you are using sbt with Scala 2.10.6:
 
-For Maven users, use "sbinary_2.7.7" for the artifact ID.
+```scala
+val sbinary = "org.scala-tools.sbinary" %% "sbinary" % "0.4.2"
+```
 
+### Build instructions
 
-= Build instructions =
-
-SBinary uses sbt to build.  Get sbt at http://code.google.com/p/simple-build-tool/wiki/Setup
+SBinary uses sbt to build.
 
 To build and run the example:
-sbt update publish-local 'project Binary Tree Example' run
+
+```
+$ sbt publishLocal 'project treeExample' run
+```
 
 This will retrieve dependencies and compile, package, and publish SBinary to your ~/.ivy2/local repository.   If you just want to use the jar directly, it is in the `target/` directory.
 
