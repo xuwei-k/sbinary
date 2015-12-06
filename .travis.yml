@@ -1,12 +1,16 @@
 language: scala
+
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION 'set every includeTestDependencies := true' update test
+  - sbt ++$TRAVIS_SCALA_VERSION test
+
 scala:
-  - 2.10.3
-  - 2.11.0-M7
+  - 2.10.6
+  - 2.11.7
+
 jdk:
   - openjdk7
   - openjdk6
+
 notifications:
   email:
     - qbranch@typesafe.com
