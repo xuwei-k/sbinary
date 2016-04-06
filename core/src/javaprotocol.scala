@@ -106,8 +106,8 @@ trait JavaUTF extends CoreProtocol{
 
       var count, charCount, c, char2, char3 = 0;
 
-      def malformed(index : Int) = error("Malformed input around byte " + index);
-      def partial = error("Malformed input: Partial character at end");
+      def malformed(index : Int) = sys.error("Malformed input around byte " + index);
+      def partial = sys.error("Malformed input: Partial character at end");
 
       while((count < utflen) && {c = bbuffer(count) & 0xff; c <= 127 }) {
         cbuffer(charCount) = c.toChar;
@@ -162,7 +162,7 @@ trait JavaUTF extends CoreProtocol{
       }
      
 	    if (utflen > 65535)
-        error("encoded string too long: " + utflen + " bytes");
+        sys.error("encoded string too long: " + utflen + " bytes");
 
       val bbuffer = fetchBuffers(utflen + 2)._2;
       var count = 0;

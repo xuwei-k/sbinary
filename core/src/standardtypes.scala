@@ -48,7 +48,7 @@ trait LowPriorityCollectionTypes extends Generic {
         val builder = cbf.apply()
         builder.sizeHint(length)
         builder ++= ts
-		  if(ts.hasNext) error("Builder did not consume all input.") // no lazy builders allowed
+		  if(ts.hasNext) sys.error("Builder did not consume all input.") // no lazy builders allowed
         builder.result()
       } 
     }
