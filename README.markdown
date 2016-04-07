@@ -11,7 +11,7 @@ offer over Haskell type classes, but the core idea has remained the same.
 
 ## Getting SBinary
 
-If you are using sbt with Scala 2.10.x, 2.11.x, or 2.12.0-M3:
+If you are using sbt with Scala 2.10.x or 2.11.x:
 
 ```scala
 val sbinary = "org.scala-tools.sbinary" %% "sbinary" % "0.4.3"
