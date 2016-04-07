@@ -89,7 +89,7 @@ trait Generic extends CoreProtocol{
   def withStamp[S, T](stamp : S)(binary : Format[T])(implicit binS : Format[S]) : Format[T] = new Format[T]{
     def reads(in : Input) = {
       val datastamp = read[S](in);
-      if (stamp != datastamp) error("Incorrect stamp. Expected: " + stamp + ", Found: " + datastamp);
+      if (stamp != datastamp) sys.error("Incorrect stamp. Expected: " + stamp + ", Found: " + datastamp);
       binary.reads(in);
     }
 
@@ -145,7 +145,7 @@ trait Generic extends CoreProtocol{
    * Uses a single tag byte to represent S as a union of subtypes. 
    */
   def asUnion[S](summands : Summand[_ <: S]*) : Format[S] = 
-    if (summands.length >= 256) error("Sums of 256 or more elements currently not supported");
+    if (summands.length >= 256) sys.error("Sums of 256 or more elements currently not supported");
     else
     new Format[S]{
       val mappings = summands.toArray.zipWithIndex;
@@ -155,7 +155,7 @@ trait Generic extends CoreProtocol{
       def writes(out : Output, s : S): Unit =
         mappings.find(_._1.clazz.isInstance(s)) match {
           case Some( (sum, i) ) => writeSum(out, s, sum, i)
-          case None => error("No known sum type for object " + s);
+          case None => sys.error("No known sum type for object " + s);
         }
       private def writeSum[T](out : Output, s : S, sum : Summand[T], i : Int) {
         write(out, i.toByte);
