@@ -7,10 +7,21 @@ lazy val root = (project in file(".")).
   aggregate(core, treeExample).
   settings(
     inThisBuild(Seq(
-      organization := "org.scala-tools.sbinary",
-      version := "0.4.3-SNAPSHOT",
+      organization := "org.scala-sbt",
+      organizationHomepage := Some(url("http://scala-sbt.org/")),
+      homepage := Some(url("https://github.com/sbt/sbinary")),
+      version := "0.4.3",
       scalaVersion := "2.10.6",
-      crossScalaVersions := Seq("2.10.6", "2.11.7")
+      crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-M3"),
+      bintrayPackage := "sbinary",
+      developers := List(
+        Developer("drmaciver", "David R. MacIver", "@drmaciver", url("https://github.com/DRMacIver")),
+        Developer("harrah", "Mark Harrah", "@harrah", url("https://github.com/harrah")),
+        Developer("eed3si9n", "Eugene Yokota", "@eed3si9n", url("https://github.com/eed3si9n"))
+      ),
+      description := "Library for describing binary formats for Scala types",
+      licenses := Seq("MIT" -> new URL("https://github.com/sbt/sbinary/blob/master/LICENSE")),
+      scmInfo := Some(ScmInfo(url("https://github.com/sbt/sbinary"), "git@github.com:sbt/sbinary.git"))
     )),
     name := "SBinary Parent",
     publish := (),
