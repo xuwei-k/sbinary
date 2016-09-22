@@ -14,6 +14,11 @@ jdk:
   - openjdk7
   - openjdk6
 
+matrix:
+  include:
+  - scala: 2.12.0-RC1
+    jdk: oraclejdk8
+
 notifications:
   email:
     - sbt-dev-bot@googlegroups.com

@@ -1,4 +1,4 @@
-lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.13.0"
+lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.13.2"
 def scalaXmlDep(scalaV: String): List[ModuleID] =
   if(scalaV.startsWith("2.11.") || scalaV.startsWith("2.12.")) List("org.scala-lang.modules" %% "scala-xml" % "1.0.5")
   else Nil
@@ -12,7 +12,7 @@ lazy val root = (project in file(".")).
       homepage := Some(url("https://github.com/sbt/sbinary")),
       version := "0.4.4-SNAPSHOT",
       scalaVersion := "2.10.6",
-      crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-M3"),
+      crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-RC1"),
       bintrayPackage := "sbinary",
       developers := List(
         Developer("drmaciver", "David R. MacIver", "@drmaciver", url("https://github.com/DRMacIver")),
