@@ -79,7 +79,7 @@ trait CollectionTypes extends BasicTypes with LowPriorityCollectionTypes {
       bytes; 
     }
 
-    def writes(out : Output, bytes : Array[Byte]){
+    def writes(out : Output, bytes : Array[Byte]): Unit = {
       write(out, bytes.length);
       out.writeAll(bytes);
     }
@@ -128,7 +128,7 @@ trait CollectionTypes extends BasicTypes with LowPriorityCollectionTypes {
       buffer.toStream;
     } 
 
-    def writes(out : Output, stream : Stream[S]){
+    def writes(out : Output, stream : Stream[S]): Unit = {
       stream.foreach(x => { write[Byte](out, 1); write(out, x); });
       write[Byte](out, 0);
     }
@@ -161,7 +161,7 @@ trait StandardTypes extends CollectionTypes{
   implicit lazy val UriFormat : Format[URI] = viaString(new URI(_ : String));
 
 
-  import scala.xml.{XML, Elem, NodeSeq};
+  import scala.xml.{XML, NodeSeq};
   implicit lazy val XmlFormat : Format[NodeSeq] = new Format[NodeSeq]{
     def reads(in : Input) = XML.loadString(read[String](in)).child;
     def writes(out : Output, elem : NodeSeq) = write(out, <binary>elem</binary>.toString);

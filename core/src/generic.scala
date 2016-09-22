@@ -3,10 +3,8 @@
  */
 package sbinary;
 
-import scala.collection.mutable.{ListBuffer, ArrayBuffer};
 import scala.collection._;
 
-import java.io._;
 import Operations._;
 
 trait Generic extends CoreProtocol{
@@ -137,7 +135,7 @@ trait Generic extends CoreProtocol{
 
   case class Summand[T](clazz : Class[_], format : Format[T]);
   implicit def classToSummand[T](clazz : Class[T])(implicit bin : Format[T]) : Summand[T] = Summand[T](clazz, bin);
-  implicit def formatToSummand[T](format : Format[T])(implicit mf : scala.reflect.Manifest[T]) : Summand[T] = Summand[T](mf.erasure, format);
+  implicit def formatToSummand[T](format : Format[T])(implicit mf : scala.reflect.Manifest[T]) : Summand[T] = Summand[T](mf.runtimeClass, format);
   // This is a bit gross. 
   implicit def anyToSummand[T](t : T) = Summand[T](t.asInstanceOf[AnyRef].getClass, asSingleton(t))
 
@@ -157,7 +155,7 @@ trait Generic extends CoreProtocol{
           case Some( (sum, i) ) => writeSum(out, s, sum, i)
           case None => sys.error("No known sum type for object " + s);
         }
-      private def writeSum[T](out : Output, s : S, sum : Summand[T], i : Int) {
+      private def writeSum[T](out : Output, s : S, sum : Summand[T], i : Int): Unit = {
         write(out, i.toByte);
         // 2.7/2.8 compatibility: cast added by MH
         write(out, sum.clazz.cast(s).asInstanceOf[T])(sum.format);
