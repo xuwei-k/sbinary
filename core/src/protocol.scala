@@ -17,8 +17,8 @@ trait Protocol {
   }
 
   implicit object UnitFormat extends Format[Unit] {
-    def reads(in: Input) {}
-    def writes(out: Output, value: Unit) {}
+    def reads(in: Input): Unit = {}
+    def writes(out: Output, value: Unit): Unit = {}
   }
 }
 

@@ -36,7 +36,7 @@ trait StandardPrimitives extends CoreProtocol {
       ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0))
     }
 
-    def writes(out: Output, t: Int) {
+    def writes(out: Output, t: Int): Unit = {
       out.writeByte(((t >>> 24) & 0xFF).toByte);
       out.writeByte(((t >>> 16) & 0xFF).toByte);
       out.writeByte(((t >>> 8) & 0xFF).toByte);
@@ -147,7 +147,7 @@ trait JavaUTF extends CoreProtocol {
       new String(cbuffer, 0, charCount);
     }
 
-    def writes(out: Output, value: String) {
+    def writes(out: Output, value: String): Unit = {
       var utflen = 0;
 
       var i = 0;
@@ -167,7 +167,7 @@ trait JavaUTF extends CoreProtocol {
 
       val bbuffer = fetchBuffers(utflen + 2)._2;
       var count = 0;
-      def append(value: Int) {
+      def append(value: Int): Unit = {
         bbuffer(count) = value.toByte;
         count += 1;
       }

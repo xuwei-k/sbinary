@@ -157,7 +157,7 @@ trait Generic extends CoreProtocol{
           case Some( (sum, i) ) => writeSum(out, s, sum, i)
           case None => sys.error("No known sum type for object " + s);
         }
-      private def writeSum[T](out : Output, s : S, sum : Summand[T], i : Int) {
+      private def writeSum[T](out : Output, s : S, sum : Summand[T], i : Int): Unit = {
         write(out, i.toByte);
         // 2.7/2.8 compatibility: cast added by MH
         write(out, sum.clazz.cast(s).asInstanceOf[T])(sum.format);

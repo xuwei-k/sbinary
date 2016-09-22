@@ -79,7 +79,7 @@ trait CollectionTypes extends BasicTypes with LowPriorityCollectionTypes {
       bytes; 
     }
 
-    def writes(out : Output, bytes : Array[Byte]){
+    def writes(out : Output, bytes : Array[Byte]): Unit = {
       write(out, bytes.length);
       out.writeAll(bytes);
     }
@@ -128,7 +128,7 @@ trait CollectionTypes extends BasicTypes with LowPriorityCollectionTypes {
       buffer.toStream;
     } 
 
-    def writes(out : Output, stream : Stream[S]){
+    def writes(out : Output, stream : Stream[S]): Unit = {
       stream.foreach(x => { write[Byte](out, 1); write(out, x); });
       write[Byte](out, 0);
     }

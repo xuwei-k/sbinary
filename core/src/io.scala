@@ -31,7 +31,7 @@ trait Input {
 
   def readTo(target: Array[Byte]): Int = readTo(target, 0, target.length);
 
-  def readFully(target: Array[Byte], offset: Int, length: Int) {
+  def readFully(target: Array[Byte], offset: Int, length: Int): Unit = {
     var bytesRead = 0;
 
     while (bytesRead < length) {
@@ -41,15 +41,15 @@ trait Input {
     }
   }
 
-  def readFully(target: Array[Byte]) {
+  def readFully(target: Array[Byte]): Unit = {
     readFully(target, 0, target.length);
   }
 }
 
 trait Output {
-  def writeByte(value: Byte);
+  def writeByte(value: Byte): Unit
 
-  def writeAll(source: Array[Byte], offset: Int, length: Int) {
+  def writeAll(source: Array[Byte], offset: Int, length: Int): Unit = {
     var i = 0;
 
     while (i < length) {
@@ -58,7 +58,7 @@ trait Output {
     }
   }
 
-  def writeAll(source: Array[Byte]) {
+  def writeAll(source: Array[Byte]): Unit = {
     writeAll(source, 0, source.length);
   }
 }
