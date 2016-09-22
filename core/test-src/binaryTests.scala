@@ -1,6 +1,5 @@
 package sbinary;
 import org.scalacheck._;
-import org.scalacheck.Test._;
 import Gen._;
 import Arbitrary.arbitrary;
 import Prop._;
@@ -97,7 +96,6 @@ object CompatTests extends Properties("CompatTests") {
 
 object LazyIOTests extends Properties("LazyIO") {
 
-  import java.io._;
   property("NoMixingOfStreams") = forAll { (x: Stream[Int]) =>
     val (u, v) = fromByteArray[(Stream[Int], Stream[Int])](toByteArray((x, x)))
     equal(u, v) && equal(u, x);

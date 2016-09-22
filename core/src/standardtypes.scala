@@ -161,7 +161,7 @@ trait StandardTypes extends CollectionTypes{
   implicit lazy val UriFormat : Format[URI] = viaString(new URI(_ : String));
 
 
-  import scala.xml.{XML, Elem, NodeSeq};
+  import scala.xml.{XML, NodeSeq};
   implicit lazy val XmlFormat : Format[NodeSeq] = new Format[NodeSeq]{
     def reads(in : Input) = XML.loadString(read[String](in)).child;
     def writes(out : Output, elem : NodeSeq) = write(out, <binary>elem</binary>.toString);
