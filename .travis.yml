@@ -1,4 +1,3 @@
-# Use container-based build
 sudo: false
 
 language: scala
@@ -9,16 +8,7 @@ script:
 scala:
   - 2.10.6
   - 2.11.8
+  - 2.12.1
 
 jdk:
-  - openjdk7
-  - openjdk6
-
-notifications:
-  email:
-    - sbt-dev-bot@googlegroups.com
-
-matrix:
-  include:
-  - scala: 2.12.0
-    jdk: oraclejdk8
+  - oraclejdk8
