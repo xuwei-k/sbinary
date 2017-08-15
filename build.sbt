@@ -1,7 +1,11 @@
 lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.13.4"
 def scalaXmlDep(scalaV: String): List[ModuleID] =
-  if(scalaV.startsWith("2.11.") || scalaV.startsWith("2.12.")) List("org.scala-lang.modules" %% "scala-xml" % "1.0.5")
-  else Nil
+  CrossVersion.partialVersion(scalaV) match {
+    case Some((2, minor)) if minor <= 10 =>
+      Nil
+    case _ =>
+      List("org.scala-lang.modules" %% "scala-xml" % "1.0.5")
+  }
 
 def relaxNon212: Seq[Setting[_]] = Seq(
     scalacOptions := {
