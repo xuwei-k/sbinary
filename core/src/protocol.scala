@@ -32,4 +32,3 @@ trait CoreProtocol extends Protocol {
   implicit val DoubleFormat: Format[Double];
   implicit val StringFormat: Format[String];
 }
-

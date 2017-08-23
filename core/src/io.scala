@@ -80,7 +80,8 @@ class JavaInput(in: InputStream) extends Input {
 
 class JavaOutput(out: OutputStream) extends Output {
   def writeByte(value: Byte) = out.write(value);
-  override def writeAll(source: Array[Byte], offset: Int, length: Int) = out.write(source, offset, length);
+  override def writeAll(source: Array[Byte], offset: Int, length: Int) =
+    out.write(source, offset, length);
 }
 
 object Input {

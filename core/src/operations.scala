@@ -1,8 +1,15 @@
-
 package sbinary;
 
 object Operations {
-  import java.io.{ BufferedInputStream, BufferedOutputStream, ByteArrayInputStream, ByteArrayOutputStream, File, FileInputStream, FileOutputStream };
+  import java.io.{
+    BufferedInputStream,
+    BufferedOutputStream,
+    ByteArrayInputStream,
+    ByteArrayOutputStream,
+    File,
+    FileInputStream,
+    FileOutputStream
+  };
 
   def format[T](implicit fm: Format[T]) = fm;
 
@@ -22,7 +29,8 @@ object Operations {
    * Read a value from the byte array. Anything past the end of the value will be
    * ignored.
    */
-  def fromByteArray[T](array: Array[Byte])(implicit bin: Reads[T]) = read[T](new ByteArrayInputStream(array));
+  def fromByteArray[T](array: Array[Byte])(implicit bin: Reads[T]) =
+    read[T](new ByteArrayInputStream(array));
 
   /**
    * Convenience method for writing binary data to a file.

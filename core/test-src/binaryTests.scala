@@ -44,20 +44,28 @@ object Equal {
     }
   }
 
-  implicit def eqTuple3[S, T, U](implicit eqS: Equal[S], eqT: Equal[T], eqU: Equal[U]): Equal[(S, T, U)] = new Equal[(S, T, U)] {
+  implicit def eqTuple3[S, T, U](
+      implicit
+      eqS: Equal[S],
+      eqT: Equal[T],
+      eqU: Equal[U]
+  ): Equal[(S, T, U)] = new Equal[(S, T, U)] {
     def apply(x: (S, T, U), y: (S, T, U)) = eqS(x._1, y._1) && eqT(x._2, y._2) && eqU(x._3, y._3);
   }
 
-  implicit def eqTuple2[S, T](implicit eqS: Equal[S], eqT: Equal[T]): Equal[(S, T)] = new Equal[(S, T)] {
-    def apply(x: (S, T), y: (S, T)) = eqS(x._1, y._1) && eqT(x._2, y._2)
-  }
+  implicit def eqTuple2[S, T](implicit eqS: Equal[S], eqT: Equal[T]): Equal[(S, T)] =
+    new Equal[(S, T)] {
+      def apply(x: (S, T), y: (S, T)) = eqS(x._1, y._1) && eqT(x._2, y._2)
+    }
 
   implicit def arraysAreEqual[T](implicit e: Equal[T]): Equal[Array[T]] = new Equal[Array[T]] {
-    def apply(x: Array[T], y: Array[T]) = (x.length == y.length) && x.zip(y).forall({ case (x, y) => e(x, y) })
+    def apply(x: Array[T], y: Array[T]) =
+      (x.length == y.length) && x.zip(y).forall({ case (x, y) => e(x, y) })
   }
 
   implicit def streamsAreEqual[T](implicit e: Equal[T]): Equal[Stream[T]] = new Equal[Stream[T]] {
-    def apply(x: Stream[T], y: Stream[T]) = (x.length == y.length) && x.zip(y).forall({ case (x, y) => e(x, y) })
+    def apply(x: Stream[T], y: Stream[T]) =
+      (x.length == y.length) && x.zip(y).forall({ case (x, y) => e(x, y) })
   }
 
   def equal[T](x: T, y: T)(implicit f: Equal[T]) = f(x, y);
@@ -69,11 +77,17 @@ import Equal._;
 object CompatTests extends Properties("CompatTests") {
   import java.io._;
 
-  def compatFor[T](name: String, readJ: DataInput => T, writeJ: (DataOutput, T) => Unit)(implicit fmt: Format[T], arb: Arbitrary[T]) = {
+  def compatFor[T](name: String, readJ: DataInput => T, writeJ: (DataOutput, T) => Unit)(
+      implicit
+      fmt: Format[T],
+      arb: Arbitrary[T]
+  ) = {
     property(name + "AgreesWithDataInput") = forAll { (x: T) =>
       val it = new ByteArrayOutputStream();
-      try { fmt.writes(it, x); readJ(new DataInputStream(new ByteArrayInputStream(it.toByteArray))) == x }
-      catch { case (e: Throwable) => e.printStackTrace; false }
+      try {
+        fmt.writes(it, x)
+        readJ(new DataInputStream(new ByteArrayInputStream(it.toByteArray))) == x
+      } catch { case (e: Throwable) => e.printStackTrace; false }
     };
 
     property(name + "AgreesWithDataOutput") = forAll { (x: T) =>
@@ -115,42 +129,57 @@ object LazyIOTests extends Properties("LazyIO") {
 }
 
 object FormatTests extends Properties("Formats") {
-  def validFormat[T](implicit
-    bin: Format[T],
-    arb: Arbitrary[T],
-    equal: Equal[T]) = forAll((x: T) =>
-    try { equal(x, fromByteArray[T](toByteArray(x))) } catch {
-      case (e: Throwable) => e.printStackTrace; false
+  def validFormat[T](
+      implicit
+      bin: Format[T],
+      arb: Arbitrary[T],
+      equal: Equal[T]
+  ) =
+    forAll((x: T) =>
+      try { equal(x, fromByteArray[T](toByteArray(x))) } catch {
+        case (e: Throwable) => e.printStackTrace; false
     })
 
-  def formatSpec[T](name: String)(implicit
-    bin: Format[T],
-    arb: Arbitrary[T],
-    equal: Equal[T]) =
-    { property(name) = validFormat[T] }
+  def formatSpec[T](name: String)(
+      implicit
+      bin: Format[T],
+      arb: Arbitrary[T],
+      equal: Equal[T]
+  ) = { property(name) = validFormat[T] }
 
   implicit val arbitraryUnit = implicitly[Arbitrary[Unit]]
 
-  implicit def arbitrarySortedMap[K, V](implicit ord: Ordering[K], arbK: Arbitrary[K], arbV: Arbitrary[V]): Arbitrary[immutable.SortedMap[K, V]] = {
+  implicit def arbitrarySortedMap[K, V](
+      implicit
+      ord: Ordering[K],
+      arbK: Arbitrary[K],
+      arbV: Arbitrary[V]
+  ): Arbitrary[immutable.SortedMap[K, V]] = {
     Arbitrary(arbitrary[List[(K, V)]].map(x => immutable.TreeMap(x: _*)))
   }
 
   //implicit def arbitrarySet[T](implicit arb : Arbitrary[T]) : Arbitrary[immutable.Set[T]] = Arbitrary(arbitrary[List[T]].map((x : List[T]) => immutable.Set(x :_*)));
-  implicit def arbitraryArray[T](implicit arb: Arbitrary[T], mf: scala.reflect.Manifest[T]): Arbitrary[Array[T]] =
+  implicit def arbitraryArray[T](
+      implicit
+      arb: Arbitrary[T],
+      mf: scala.reflect.Manifest[T]
+  ): Arbitrary[Array[T]] =
     Arbitrary(arbitrary[List[T]].map((x: List[T]) => x.toArray[T]));
 
-  def enum(names: Seq[String]): Enumeration = new Enumeration { names foreach { n => Value(n) } }
+  def enum(names: Seq[String]): Enumeration = new Enumeration { names foreach (n => Value(n)) }
 
-  implicit val arbitraryEnumeration: Arbitrary[Enumeration] = Arbitrary(arbitrary[List[String]].map(enum));
+  implicit val arbitraryEnumeration: Arbitrary[Enumeration] =
+    Arbitrary(arbitrary[List[String]].map(enum));
 
-  implicit def orderedOption[T](opt: Option[T])(implicit ord: Ordering[T]): Ordered[Option[T]] = new Ordered[Option[T]] {
-    def compare(that: Option[T]) = (opt, that) match {
-      case (None, None)       => 0;
-      case (None, Some(_))    => -1;
-      case (Some(_), None)    => 1;
-      case (Some(x), Some(y)) => ord.compare(x, y);
+  implicit def orderedOption[T](opt: Option[T])(implicit ord: Ordering[T]): Ordered[Option[T]] =
+    new Ordered[Option[T]] {
+      def compare(that: Option[T]) = (opt, that) match {
+        case (None, None)       => 0;
+        case (None, Some(_))    => -1;
+        case (Some(_), None)    => 1;
+        case (Some(x), Some(y)) => ord.compare(x, y);
+      }
     }
-  }
 
   trait Foo;
 
@@ -181,18 +210,20 @@ object FormatTests extends Properties("Formats") {
   implicit val BinaryTreeIsFormat: Format[BinaryTree] = lazyFormat({
     implicit val formatLeaf = asSingleton(Leaf());
 
-    implicit val formatSplit: Format[Split] = asProduct2((x: BinaryTree, y: BinaryTree) => Split(x, y))((s: Split) => (s.left, s.right));
+    implicit val formatSplit: Format[Split] =
+      asProduct2((x: BinaryTree, y: BinaryTree) => Split(x, y))((s: Split) => (s.left, s.right));
     asUnion[BinaryTree](classOf[Leaf], classOf[Split]);
   })
 
   implicit val arbitraryTree: Arbitrary[BinaryTree] = {
     def sizedArbitraryTree(n: Int): Gen[BinaryTree] =
       if (n <= 1) (Leaf(): Gen[BinaryTree])
-      else for (
-        i <- choose(1, n - 1);
-        left <- sizedArbitraryTree(i);
-        right <- sizedArbitraryTree(n - i)
-      ) yield (Split(left, right));
+      else
+        for {
+          i <- choose(1, n - 1);
+          left <- sizedArbitraryTree(i);
+          right <- sizedArbitraryTree(n - i)
+        } yield (Split(left, right));
     Arbitrary[BinaryTree](sized(sizedArbitraryTree(_: Int)))
   }
 
