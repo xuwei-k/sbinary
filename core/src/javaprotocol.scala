@@ -202,5 +202,4 @@ trait JavaUTF extends CoreProtocol {
   }
 }
 
-trait JavaFormats extends StandardPrimitives with JavaUTF {
-}
+trait JavaFormats extends StandardPrimitives with JavaUTF {}
