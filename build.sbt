@@ -33,8 +33,8 @@ lazy val root = (project in file("."))
         organizationHomepage := Some(url("http://scala-sbt.org/")),
         homepage := Some(url("https://github.com/sbt/sbinary")),
         version := "0.4.5-SNAPSHOT",
-        scalaVersion := "2.12.3",
-        crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.3", "2.13.0-M2"),
+        scalaVersion := "2.12.4",
+        crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.4", "2.13.0-M3"),
         bintrayPackage := "sbinary",
         developers := List(
           Developer(
