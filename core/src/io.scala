@@ -10,8 +10,8 @@ import EOF.eof
 trait Input {
 
   /**
-   * Read a byte. If we have come to the end of the stream, throws EOF.
-   */
+    * Read a byte. If we have come to the end of the stream, throws EOF.
+    */
   def readByte: Byte;
 
   def readTo(target: Array[Byte], offset: Int, length: Int): Int = {
@@ -88,5 +88,6 @@ object Input {
   implicit def javaInputToInput(x: InputStream): JavaInput = new JavaInput(x)
 }
 object Output {
-  implicit def javaOutputToOutput(x: OutputStream): JavaOutput = new JavaOutput(x);
+  implicit def javaOutputToOutput(x: OutputStream): JavaOutput =
+    new JavaOutput(x);
 }

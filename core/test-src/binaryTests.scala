@@ -28,21 +28,23 @@ object Equal {
   implicit def eqMap[S, T] = allAreEqual[immutable.Map[S, T]];
   implicit def eqSortedMap[S, T] = allAreEqual[immutable.SortedMap[S, T]];
 
-  implicit def eqList[T](implicit eqT: Equal[T]): Equal[List[T]] = new Equal[List[T]] {
-    def apply(x: List[T], y: List[T]) = (x, y) match {
-      case (Nil, Nil)         => true;
-      case (x :: xs, y :: ys) => eqT(x, y) && apply(xs, ys);
-      case _                  => false;
+  implicit def eqList[T](implicit eqT: Equal[T]): Equal[List[T]] =
+    new Equal[List[T]] {
+      def apply(x: List[T], y: List[T]) = (x, y) match {
+        case (Nil, Nil)         => true;
+        case (x :: xs, y :: ys) => eqT(x, y) && apply(xs, ys);
+        case _                  => false;
+      }
     }
-  }
 
-  implicit def eqOption[T](implicit eqT: Equal[T]): Equal[Option[T]] = new Equal[Option[T]] {
-    def apply(x: Option[T], y: Option[T]) = (x, y) match {
-      case (None, None)       => true;
-      case (Some(u), Some(v)) => eqT(u, v);
-      case _                  => false;
+  implicit def eqOption[T](implicit eqT: Equal[T]): Equal[Option[T]] =
+    new Equal[Option[T]] {
+      def apply(x: Option[T], y: Option[T]) = (x, y) match {
+        case (None, None)       => true;
+        case (Some(u), Some(v)) => eqT(u, v);
+        case _                  => false;
+      }
     }
-  }
 
   implicit def eqTuple3[S, T, U](
       implicit
@@ -50,23 +52,27 @@ object Equal {
       eqT: Equal[T],
       eqU: Equal[U]
   ): Equal[(S, T, U)] = new Equal[(S, T, U)] {
-    def apply(x: (S, T, U), y: (S, T, U)) = eqS(x._1, y._1) && eqT(x._2, y._2) && eqU(x._3, y._3);
+    def apply(x: (S, T, U), y: (S, T, U)) =
+      eqS(x._1, y._1) && eqT(x._2, y._2) && eqU(x._3, y._3);
   }
 
-  implicit def eqTuple2[S, T](implicit eqS: Equal[S], eqT: Equal[T]): Equal[(S, T)] =
+  implicit def eqTuple2[S, T](implicit eqS: Equal[S],
+                              eqT: Equal[T]): Equal[(S, T)] =
     new Equal[(S, T)] {
       def apply(x: (S, T), y: (S, T)) = eqS(x._1, y._1) && eqT(x._2, y._2)
     }
 
-  implicit def arraysAreEqual[T](implicit e: Equal[T]): Equal[Array[T]] = new Equal[Array[T]] {
-    def apply(x: Array[T], y: Array[T]) =
-      (x.length == y.length) && x.zip(y).forall({ case (x, y) => e(x, y) })
-  }
+  implicit def arraysAreEqual[T](implicit e: Equal[T]): Equal[Array[T]] =
+    new Equal[Array[T]] {
+      def apply(x: Array[T], y: Array[T]) =
+        (x.length == y.length) && x.zip(y).forall({ case (x, y) => e(x, y) })
+    }
 
-  implicit def streamsAreEqual[T](implicit e: Equal[T]): Equal[Stream[T]] = new Equal[Stream[T]] {
-    def apply(x: Stream[T], y: Stream[T]) =
-      (x.length == y.length) && x.zip(y).forall({ case (x, y) => e(x, y) })
-  }
+  implicit def streamsAreEqual[T](implicit e: Equal[T]): Equal[Stream[T]] =
+    new Equal[Stream[T]] {
+      def apply(x: Stream[T], y: Stream[T]) =
+        (x.length == y.length) && x.zip(y).forall({ case (x, y) => e(x, y) })
+    }
 
   def equal[T](x: T, y: T)(implicit f: Equal[T]) = f(x, y);
 
@@ -77,7 +83,9 @@ import Equal._;
 object CompatTests extends Properties("CompatTests") {
   import java.io._;
 
-  def compatFor[T](name: String, readJ: DataInput => T, writeJ: (DataOutput, T) => Unit)(
+  def compatFor[T](name: String,
+                   readJ: DataInput => T,
+                   writeJ: (DataOutput, T) => Unit)(
       implicit
       fmt: Format[T],
       arb: Arbitrary[T]
@@ -115,9 +123,11 @@ object LazyIOTests extends Properties("LazyIO") {
     equal(u, v) && equal(u, x);
   };
 
-  property("NoMixingOfStreamsAndOthers") = forAll { (x: Stream[Int], y: String, z: Stream[Int]) =>
-    val (u, s, v) = fromByteArray[(Stream[Int], String, Stream[Int])](toByteArray((x, y, z)))
-    equal(u, x) && equal(s, y) && equal(z, v);
+  property("NoMixingOfStreamsAndOthers") = forAll {
+    (x: Stream[Int], y: String, z: Stream[Int]) =>
+      val (u, s, v) = fromByteArray[(Stream[Int], String, Stream[Int])](
+        toByteArray((x, y, z)))
+      equal(u, x) && equal(s, y) && equal(z, v);
   };
 
   property("StreamsOfStreams") = forAll { (x: Stream[Stream[Int]]) =>
@@ -166,12 +176,15 @@ object FormatTests extends Properties("Formats") {
   ): Arbitrary[Array[T]] =
     Arbitrary(arbitrary[List[T]].map((x: List[T]) => x.toArray[T]));
 
-  def enum(names: Seq[String]): Enumeration = new Enumeration { names foreach (n => Value(n)) }
+  def enum(names: Seq[String]): Enumeration = new Enumeration {
+    names foreach (n => Value(n))
+  }
 
   implicit val arbitraryEnumeration: Arbitrary[Enumeration] =
     Arbitrary(arbitrary[List[String]].map(enum));
 
-  implicit def orderedOption[T](opt: Option[T])(implicit ord: Ordering[T]): Ordered[Option[T]] =
+  implicit def orderedOption[T](opt: Option[T])(
+      implicit ord: Ordering[T]): Ordered[Option[T]] =
     new Ordered[Option[T]] {
       def compare(that: Option[T]) = (opt, that) match {
         case (None, None)       => 0;
@@ -191,7 +204,8 @@ object FormatTests extends Properties("Formats") {
 
   implicit val BazFormat: Format[Baz] = viaString(Baz)
   implicit val BifFormat: Format[Bif] = asProduct2(Bif)(Bif.unapply(_).get)
-  implicit val FooFormat: Format[Foo] = asUnion[Foo](Bar, classOf[Baz], classOf[Bif])
+  implicit val FooFormat: Format[Foo] =
+    asUnion[Foo](Bar, classOf[Baz], classOf[Bif])
 
   implicit val arbitraryFoo: Arbitrary[Foo] = Arbitrary[Foo](
     oneOf(
@@ -211,7 +225,8 @@ object FormatTests extends Properties("Formats") {
     implicit val formatLeaf = asSingleton(Leaf());
 
     implicit val formatSplit: Format[Split] =
-      asProduct2((x: BinaryTree, y: BinaryTree) => Split(x, y))((s: Split) => (s.left, s.right));
+      asProduct2((x: BinaryTree, y: BinaryTree) => Split(x, y))((s: Split) =>
+        (s.left, s.right));
     asUnion[BinaryTree](classOf[Leaf], classOf[Split]);
   })
 
@@ -249,7 +264,8 @@ object FormatTests extends Properties("Formats") {
 
   formatSpec[(Int, Int, Int)]("(Int, Int, Int)");
   formatSpec[(String, Int, String)]("(String, Int, String)")
-  formatSpec[((Int, (String, Int), Int))]("((Int, (String, Int), Byte, Byte, Int))]");
+  formatSpec[((Int, (String, Int), Int))](
+    "((Int, (String, Int), Byte, Byte, Int))]");
   formatSpec[(String, String)]("(String, String)")
 
   formatSpec[Option[String]]("Option[String]");
@@ -283,12 +299,15 @@ object FormatTests extends Properties("Formats") {
   formatSpec[Stream[Stream[Int]]]("Stream[Stream[Int]]");
 
   formatSpec[immutable.Map[Int, Int]]("immutable.Map[Int, Int]");
-  formatSpec[immutable.Map[Option[String], Int]]("immutable.Map[Option[String], Int]");
+  formatSpec[immutable.Map[Option[String], Int]](
+    "immutable.Map[Option[String], Int]");
   formatSpec[immutable.Map[List[Int], Int]]("immutable.Map[List[Int], String]");
 
   formatSpec[immutable.SortedMap[Int, Int]]("immutable.SortedMap[Int, Int]");
-  formatSpec[immutable.SortedMap[String, Int]]("immutable.SortedMap[String, Int]");
-  formatSpec[immutable.SortedMap[Option[String], Int]]("immutable.SortedMap[Option[String], Int]");
+  formatSpec[immutable.SortedMap[String, Int]](
+    "immutable.SortedMap[String, Int]");
+  formatSpec[immutable.SortedMap[Option[String], Int]](
+    "immutable.SortedMap[Option[String], Int]");
 
   formatSpec[Foo]("Foo")
   formatSpec[(Foo, Foo)]("(Foo, Foo)")
