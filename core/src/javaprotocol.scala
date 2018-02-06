@@ -7,8 +7,7 @@ trait StandardPrimitives extends CoreProtocol {
 
   implicit object BooleanFormat extends Format[Boolean] {
     def reads(in: Input) = in.readByte != 0
-    def writes(out: Output, t: Boolean) =
-      out.writeByte(if (t) (0x01) else (0x00));
+    def writes(out: Output, t: Boolean) = out.writeByte(if (t) (0x01) else (0x00));
   }
 
   implicit object CharFormat extends Format[Char] {
@@ -69,14 +68,12 @@ trait StandardPrimitives extends CoreProtocol {
 
   implicit object FloatFormat extends Format[Float] {
     def reads(in: Input) = java.lang.Float.intBitsToFloat(read[Int](in))
-    def writes(out: Output, t: Float) =
-      write[Int](out, java.lang.Float.floatToIntBits(t));
+    def writes(out: Output, t: Float) = write[Int](out, java.lang.Float.floatToIntBits(t));
   }
 
   implicit object DoubleFormat extends Format[Double] {
     def reads(in: Input) = java.lang.Double.longBitsToDouble(read[Long](in));
-    def writes(out: Output, t: Double) =
-      write[Long](out, java.lang.Double.doubleToLongBits(t));
+    def writes(out: Output, t: Double) = write[Long](out, java.lang.Double.doubleToLongBits(t));
   }
 }
 
@@ -85,10 +82,9 @@ trait JavaUTF extends CoreProtocol {
   private[this] def readUnsignedShort(in: Input): Int =
     (readUnsignedByte(in) << 8) + readUnsignedByte(in)
 
-  private[this] val buffers =
-    new java.lang.ThreadLocal[(Array[Char], Array[Byte])] {
-      override def initialValue() = (new Array[Char](80), new Array[Byte](80))
-    }
+  private[this] val buffers = new java.lang.ThreadLocal[(Array[Char], Array[Byte])] {
+    override def initialValue() = (new Array[Char](80), new Array[Byte](80))
+  }
 
   private[this] def fetchBuffers(size: Int) = {
     if (buffers.get()._1.length < size) {
@@ -98,9 +94,9 @@ trait JavaUTF extends CoreProtocol {
   }
 
   /**
-    * A Format for strings compatible with the modified UTF format used by
-    * java.io.DataInput and java.io.DataOutput.
-    */
+   * A Format for strings compatible with the modified UTF format used by
+   * java.io.DataInput and java.io.DataOutput.
+   */
   implicit object StringFormat extends Format[String] {
     def reads(in: Input) = {
       val utflen = readUnsignedShort(in);
@@ -110,8 +106,7 @@ trait JavaUTF extends CoreProtocol {
 
       var count, charCount, c, char2, char3 = 0;
 
-      def malformed(index: Int) =
-        sys.error("Malformed input around byte " + index);
+      def malformed(index: Int) = sys.error("Malformed input around byte " + index);
       def partial = sys.error("Malformed input: Partial character at end");
 
       while ((count < utflen) && { c = bbuffer(count) & 0xff; c <= 127 }) {

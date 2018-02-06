@@ -21,9 +21,8 @@ object MyProtocol extends DefaultProtocol {
     }
 
     def writes(out: Output, value: BT) = value match {
-      case Bin(left, right) =>
-        write[Byte](out, 0); writes(out, left); writes(out, right);
-      case Leaf(label) => write[Byte](out, 1); write(out, label);
+      case Bin(left, right) => write[Byte](out, 0); writes(out, left); writes(out, right);
+      case Leaf(label)      => write[Byte](out, 1); write(out, label);
     }
   }
 }
