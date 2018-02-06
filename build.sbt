@@ -43,21 +43,13 @@ lazy val root = (project in file("."))
             "@drmaciver",
             url("https://github.com/DRMacIver")
           ),
-          Developer("harrah",
-                    "Mark Harrah",
-                    "@harrah",
-                    url("https://github.com/harrah")),
-          Developer("eed3si9n",
-                    "Eugene Yokota",
-                    "@eed3si9n",
-                    url("https://github.com/eed3si9n"))
+          Developer("harrah", "Mark Harrah", "@harrah", url("https://github.com/harrah")),
+          Developer("eed3si9n", "Eugene Yokota", "@eed3si9n", url("https://github.com/eed3si9n"))
         ),
         description := "Library for describing binary formats for Scala types",
-        licenses := Seq("MIT" -> new URL(
-          "https://github.com/sbt/sbinary/blob/master/LICENSE")),
+        licenses := Seq("MIT" -> new URL("https://github.com/sbt/sbinary/blob/master/LICENSE")),
         scmInfo := Some(
-          ScmInfo(url("https://github.com/sbt/sbinary"),
-                  "git@github.com:sbt/sbinary.git")
+          ScmInfo(url("https://github.com/sbt/sbinary"), "git@github.com:sbt/sbinary.git")
         )
       )),
     name := "SBinary Parent",
