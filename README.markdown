@@ -14,7 +14,7 @@ offer over Haskell type classes, but the core idea has remained the same.
 If you are using sbt with Scala 2.10.x or 2.11.x:
 
 ```scala
-val sbinary = "org.scala-sbt" %% "sbinary" % "0.4.3"
+val sbinary = "org.scala-sbt" %% "sbinary" % "0.4.4"
 ```
 
 ## Credits
