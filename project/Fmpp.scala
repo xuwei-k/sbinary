@@ -12,21 +12,28 @@ object Fmpp {
     libraryDependencies += "net.sourceforge.fmpp" % "fmpp" % "0.9.14" % fmppConfig.name,
     ivyConfigurations += fmppConfig,
     fmppOptions := "--ignore-temporary-files" :: Nil,
-    fullClasspath in fmppConfig <<= update map { _ select configurationFilter(fmppConfig.name) map Attributed.blank }
+    fullClasspath in fmppConfig := update.value select configurationFilter(fmppConfig.name) map Attributed.blank
   )
 
   def fmppConfig(c: Configuration): Seq[Setting[_]] = inConfig(c)(Seq(
-    sourceGenerators <+= fmpp,
-    fmpp <<= fmppTask,
-    scalaSource <<= (baseDirectory, configuration) { (base,c) => base / (Defaults.prefix(c.name) + "src") },
-    mappings in packageSrc <<= (managedSources, sourceManaged) map { (srcs, base) => srcs x relativeTo(base) },
-    sources <<= managedSources
+    sourceGenerators += fmpp,
+    fmpp := fmppTask.value,
+    scalaSource := baseDirectory.value / (Defaults.prefix(configuration.value.name) + "src"),
+    mappings in packageSrc := managedSources.value pair relativeTo(sourceManaged.value),
+    sources := managedSources.value
   ))
   lazy val fmppTask =
-    (fullClasspath in fmppConfig, runner in fmpp, unmanagedSources, scalaSource, sourceManaged, fmppOptions, streams) map { (cp, r, sources, srcRoot, output, args, s) =>
+    Def.task {
+      val cp = (fullClasspath in fmppConfig).value
+      val r = (runner in fmpp).value
+      val sources = unmanagedSources.value
+      val srcRoot = scalaSource.value
+      val output = sourceManaged.value
+      val args = fmppOptions.value
+      val s = streams.value
       IO.delete(output)
       val arguments = "-U" +: "all" +: "-S" +: srcRoot.getAbsolutePath +: "-O" +: output.getAbsolutePath +: (args ++ sources.getPaths)
-      toError(r.run("fmpp.tools.CommandLine", cp.files, arguments, s.log))
+      r.run("fmpp.tools.CommandLine", cp.files, arguments, s.log).foreach(sys.error)
       (output ** "*.scala").get
     }
 }
