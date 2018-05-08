@@ -86,20 +86,20 @@ trait CollectionTypes extends BasicTypes with LowPriorityCollectionTypes {
   }
 
   implicit def mutableSetFormat[T](implicit bin : Format[T]) : Format[mutable.Set[T]] = 
-    viaSeq((x : Seq[T]) => mutable.Set(x :_*))
+    viaSeq((x : Seq[T]) => mutable.Set(x.toSeq :_*))
 
   implicit def immutableSetFormat[T](implicit bin : Format[T]) : Format[immutable.Set[T]] = 
-    viaSeq((x : Seq[T]) => immutable.Set(x :_*))
+    viaSeq((x : Seq[T]) => immutable.Set(x.toSeq :_*))
 
   implicit def immutableSortedSetFormat[S](implicit ord : Ordering[S], binS : Format[S]) : Format[immutable.SortedSet[S]] = {
-    viaSeq( (x : Seq[S]) => immutable.TreeSet[S](x :_*))
+    viaSeq( (x : Seq[S]) => immutable.TreeSet[S](x.toSeq :_*))
   }
 
   implicit def immutableMapFormat[S, T](implicit binS : Format[S], binT : Format[T]) : Format[immutable.Map[S, T]] =
-    viaSeq( (x : Seq[(S, T)]) => immutable.Map(x :_*));
+    viaSeq( (x : Seq[(S, T)]) => immutable.Map(x.toSeq :_*));
 
   implicit def immutableSortedMapFormat[S, T](implicit ord : Ordering[S], binS : Format[S], binT : Format[T]) : Format[immutable.SortedMap[S, T]] = {
-    viaSeq( (x : Seq[(S, T)]) => immutable.TreeMap[S, T](x :_*))
+    viaSeq( (x : Seq[(S, T)]) => immutable.TreeMap[S, T](x.toSeq :_*))
   }
 
   /**
