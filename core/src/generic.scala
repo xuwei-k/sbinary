@@ -41,7 +41,7 @@ trait Generic extends CoreProtocol{
    * Length encodes, but with the result built from a Seq.
 	* Useful for when a `ClassManifest` is not available the underlying type `T`.
    */
-  def viaSeq[S <: Traversable[T], T] (f : Seq[T] => S) (implicit binary : Format[T]) : Format[S] = new Format[S] {
+  def viaSeq[S <: Traversable[T], T] (f : collection.Seq[T] => S) (implicit binary : Format[T]) : Format[S] = new Format[S] {
     def writes(out : Output, xs : S) = { write(out, xs.size); xs.foreach(write(out, _)); }
     def reads(in : Input) = f(read[List[T]](in));
   }
