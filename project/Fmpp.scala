@@ -18,16 +18,14 @@ object Fmpp {
   def fmppConfig(c: Configuration): Seq[Setting[_]] = inConfig(c)(Seq(
     sourceGenerators += fmpp,
     fmpp := fmppTask.value,
-    scalaSource := baseDirectory.value / (Defaults.prefix(configuration.value.name) + "src"),
-    mappings in packageSrc := managedSources.value pair relativeTo(sourceManaged.value),
-    sources := managedSources.value
+    mappings in packageSrc ++= managedSources.value pair relativeTo(sourceManaged.value)
   ))
   lazy val fmppTask =
     Def.task {
       val cp = (fullClasspath in fmppConfig).value
       val r = (runner in fmpp).value
-      val sources = unmanagedSources.value
-      val srcRoot = scalaSource.value
+      val srcRoot = baseDirectory.value / "src" / "main" / "fmpp"
+      val sources = (srcRoot ** "*.scala").get
       val output = sourceManaged.value
       val args = fmppOptions.value
       val s = streams.value
