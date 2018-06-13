@@ -1,10 +1,12 @@
-lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.13.5"
+lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.14.0"
 def scalaXmlDep(scalaV: String): List[ModuleID] =
   CrossVersion.partialVersion(scalaV) match {
     case Some((2, minor)) if minor <= 10 =>
       Nil
-    case _ =>
+    case Some((2, 11 | 12)) =>
       List("org.scala-lang.modules" %% "scala-xml" % "1.0.6")
+    case _ =>
+      List("org.scala-lang.modules" %% "scala-xml" % "1.1.0")
   }
 
 def relaxOldScala: Seq[Setting[_]] = Seq(
@@ -12,7 +14,9 @@ def relaxOldScala: Seq[Setting[_]] = Seq(
     val old = scalacOptions.value
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, n)) if n >= 12 =>
-        old
+        old filterNot Set(
+          "-Yno-adapted-args"
+        )
       case _ =>
         old filterNot (Set(
           "-Xfatal-warnings",
@@ -34,7 +38,7 @@ lazy val root = (project in file("."))
         homepage := Some(url("https://github.com/sbt/sbinary")),
         version := "0.4.5-SNAPSHOT",
         scalaVersion := "2.12.4",
-        crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.4", "2.13.0-M3"),
+        crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.4", "2.13.0-M4"),
         bintrayPackage := "sbinary",
         developers := List(
           Developer(
@@ -63,6 +67,15 @@ lazy val core = (project in file("core")).settings(
   Fmpp.templateSettings,
   libraryDependencies += scalacheck % Test,
   libraryDependencies ++= scalaVersion(scalaXmlDep).value,
+  unmanagedSourceDirectories in Compile += {
+    val base = (scalaSource in Compile).value.getParentFile
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, v)) if v >= 13 =>
+        base / s"scala-2.13+"
+      case _ =>
+        base / s"scala-2.13-"
+    }
+  },
   unmanagedResources in Compile += (baseDirectory map { _ / "LICENSE" }).value
 )
 
