@@ -61,6 +61,18 @@ lazy val core = (project in file("core")).settings(
   name := "SBinary",
   relaxOldScala,
   Fmpp.templateSettings,
+  mimaPreviousArtifacts := {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, v)) if v >= 13 =>
+        Set.empty
+      case _ =>
+        Set(
+          "0.4.4"
+        ).map { v =>
+          organization.value %% moduleName.value % v
+        }
+    }
+  },
   libraryDependencies += scalacheck % Test,
   libraryDependencies ++= scalaVersion(scalaXmlDep).value,
   unmanagedResources in Compile += (baseDirectory map { _ / "LICENSE" }).value

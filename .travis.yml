@@ -3,7 +3,7 @@ sudo: false
 language: scala
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION test scalafmt::test test:scalafmt::test sbt:scalafmt::test
+  - sbt ++$TRAVIS_SCALA_VERSION test scalafmt::test test:scalafmt::test sbt:scalafmt::test mimaReportBinaryIssues
 
 scala:
   - 2.10.7
