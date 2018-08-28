@@ -108,7 +108,7 @@ trait Generic extends CoreProtocol{
     def writes(out : Output, value : V) = write(out, value.id)
   }
 
-  <#list 2..9 as i> 
+  <#list 2..21 as i> 
   <#assign typeParams><#list 1..i as j>T${j}<#if i !=j>,</#if></#list></#assign>
   /**
    * Represents this type as ${i} consecutive binary blocks of type T1..T${i},
