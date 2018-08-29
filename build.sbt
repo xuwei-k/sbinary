@@ -36,7 +36,7 @@ lazy val root = (project in file("."))
         organization := "org.scala-sbt",
         organizationHomepage := Some(url("http://scala-sbt.org/")),
         homepage := Some(url("https://github.com/sbt/sbinary")),
-        version := "0.4.5-SNAPSHOT",
+        version := "0.5.0-SNAPSHOT",
         scalaVersion := "2.12.4",
         crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.4", "2.13.0-M4"),
         bintrayPackage := "sbinary",
@@ -66,16 +66,7 @@ lazy val core = (project in file("core")).settings(
   relaxOldScala,
   Fmpp.templateSettings,
   mimaPreviousArtifacts := {
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, v)) if v >= 13 =>
-        Set.empty
-      case _ =>
-        Set(
-          "0.4.4"
-        ).map { v =>
-          organization.value %% moduleName.value % v
-        }
-    }
+    Set.empty
   },
   libraryDependencies += scalacheck % Test,
   libraryDependencies ++= scalaVersion(scalaXmlDep).value,
