@@ -57,8 +57,7 @@ lazy val root = (project in file("."))
         )
       )),
     name := "SBinary Parent",
-    publish := (),
-    publishLocal := ()
+    skip in publish := true
   )
 
 lazy val core = (project in file("core")).settings(
@@ -87,6 +86,5 @@ lazy val treeExample = (project in (file("examples") / "bt"))
   .settings(
     name := "SBinary Tree Example",
     relaxOldScala,
-    publish := (),
-    publishLocal := ()
+    skip in publish := true
   )
