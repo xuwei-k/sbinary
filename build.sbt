@@ -36,7 +36,7 @@ lazy val root = (project in file("."))
         organization := "org.scala-sbt",
         organizationHomepage := Some(url("http://scala-sbt.org/")),
         homepage := Some(url("https://github.com/sbt/sbinary")),
-        version := "0.5.0-SNAPSHOT",
+        version := "0.5.1-SNAPSHOT",
         scalaVersion := "2.12.4",
         crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.4", "2.13.0-M4"),
         bintrayPackage := "sbinary",
@@ -57,8 +57,7 @@ lazy val root = (project in file("."))
         )
       )),
     name := "SBinary Parent",
-    publish := (),
-    publishLocal := ()
+    skip in publish := true
   )
 
 lazy val core = (project in file("core")).settings(
@@ -87,6 +86,5 @@ lazy val treeExample = (project in (file("examples") / "bt"))
   .settings(
     name := "SBinary Tree Example",
     relaxOldScala,
-    publish := (),
-    publishLocal := ()
+    skip in publish := true
   )
