@@ -9,7 +9,7 @@ object Fmpp {
 
   lazy val templateSettings = fmppConfig(Test) ++ fmppConfig(Compile) ++ templateBase
   lazy val templateBase = Seq(
-    libraryDependencies += "net.sourceforge.fmpp" % "fmpp" % "0.9.14" % fmppConfig.name,
+    libraryDependencies += "net.sourceforge.fmpp" % "fmpp" % "0.9.16" % fmppConfig.name,
     ivyConfigurations += fmppConfig,
     fmppOptions := "--ignore-temporary-files" :: Nil,
     fullClasspath in fmppConfig := update.value select configurationFilter(fmppConfig.name) map Attributed.blank
