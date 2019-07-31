@@ -6,7 +6,7 @@ def scalaXmlDep(scalaV: String): List[ModuleID] =
     case Some((2, 11 | 12)) =>
       List("org.scala-lang.modules" %% "scala-xml" % "1.0.6")
     case _ =>
-      List("org.scala-lang.modules" %% "scala-xml" % "1.1.0")
+      List("org.scala-lang.modules" %% "scala-xml" % "1.2.0")
   }
 
 def relaxOldScala: Seq[Setting[_]] = Seq(
@@ -15,6 +15,8 @@ def relaxOldScala: Seq[Setting[_]] = Seq(
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, n)) if n >= 12 =>
         old filterNot Set(
+          "-Xfatal-warnings",
+          "-Ywarn-unused-import",
           "-Yno-adapted-args"
         )
       case _ =>
@@ -38,7 +40,7 @@ lazy val root = (project in file("."))
         homepage := Some(url("https://github.com/sbt/sbinary")),
         version := "0.5.1-SNAPSHOT",
         scalaVersion := "2.12.7",
-        crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.7", "2.13.0-M4"),
+        crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.7", "2.13.0"),
         bintrayPackage := "sbinary",
         developers := List(
           Developer(
