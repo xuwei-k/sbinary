@@ -1,4 +1,4 @@
-lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.14.2"
+lazy val scalacheck = "org.scalacheck" %% "scalacheck" % "1.14.3"
 def scalaXmlDep(scalaV: String): List[ModuleID] =
   CrossVersion.partialVersion(scalaV) match {
     case Some((2, minor)) if minor <= 10 =>
