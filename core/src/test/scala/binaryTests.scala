@@ -135,10 +135,14 @@ object FormatTests extends Properties("Formats") {
       arb: Arbitrary[T],
       equal: Equal[T]
   ) =
-    forAll((x: T) =>
-      try { equal(x, fromByteArray[T](toByteArray(x))) } catch {
-        case (e: Throwable) => e.printStackTrace; false
-    })
+    forAll(
+      (x: T) =>
+        try {
+          equal(x, fromByteArray[T](toByteArray(x)))
+        } catch {
+          case (e: Throwable) => e.printStackTrace; false
+        }
+    )
 
   def formatSpec[T](name: String)(
       implicit
