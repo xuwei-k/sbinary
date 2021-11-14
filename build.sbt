@@ -5,7 +5,7 @@ ThisBuild / organizationHomepage := Some(url("http://scala-sbt.org/"))
 ThisBuild / homepage := Some(url("https://github.com/sbt/sbinary"))
 ThisBuild / version := "0.5.2-SNAPSHOT"
 ThisBuild / scalaVersion := scala212
-ThisBuild / crossScalaVersions := Seq(scala210, scala211, scala212, scala213)
+ThisBuild / crossScalaVersions := Seq(scala210, scala211, scala212, scala213, scala3)
 ThisBuild / bintrayPackage := "sbinary"
 ThisBuild / developers := List(
   Developer(
@@ -38,12 +38,12 @@ lazy val core = (project in file("core"))
     mimaPreviousArtifacts := {
       Set.empty
     }
-    libraryDependencies += scalacheck % Test
+    libraryDependencies += scalacheck.value % Test
     libraryDependencies ++= scalaVersion(scalaXmlDep).value
     Compile / unmanagedSourceDirectories += {
       val base = (Compile / scalaSource).value.getParentFile
       CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, v)) if v >= 13 =>
+        case Some((2, 13)) | Some((3, _)) =>
           base / s"scala-2.13+"
         case _ =>
           base / s"scala-2.13-"

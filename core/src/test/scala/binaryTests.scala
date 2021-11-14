@@ -15,18 +15,18 @@ object Equal {
     def apply(x: T, y: T) = x == y
   }
 
-  implicit val eqString = allAreEqual[String];
-  implicit val eqInt = allAreEqual[Int];
-  implicit val eqLong = allAreEqual[Long];
-  implicit val eqBoolean = allAreEqual[Boolean];
-  implicit val eqUnit = allAreEqual[Unit];
-  implicit val eqByte = allAreEqual[Byte];
-  implicit val eqDouble = allAreEqual[Double];
-  implicit val eqChar = allAreEqual[Char];
-  implicit def eqSet[T] = allAreEqual[immutable.Set[T]];
-  implicit def eqSortedSet[T] = allAreEqual[immutable.SortedSet[T]];
-  implicit def eqMap[S, T] = allAreEqual[immutable.Map[S, T]];
-  implicit def eqSortedMap[S, T] = allAreEqual[immutable.SortedMap[S, T]];
+  implicit val eqString: Equal[String] = allAreEqual[String];
+  implicit val eqInt: Equal[Int] = allAreEqual[Int];
+  implicit val eqLong: Equal[Long] = allAreEqual[Long];
+  implicit val eqBoolean: Equal[Boolean] = allAreEqual[Boolean];
+  implicit val eqUnit: Equal[Unit] = allAreEqual[Unit];
+  implicit val eqByte: Equal[Byte] = allAreEqual[Byte];
+  implicit val eqDouble: Equal[Double] = allAreEqual[Double];
+  implicit val eqChar: Equal[Char] = allAreEqual[Char];
+  implicit def eqSet[T]: Equal[immutable.Set[T]] = allAreEqual[immutable.Set[T]];
+  implicit def eqSortedSet[T]: Equal[immutable.SortedSet[T]] = allAreEqual[immutable.SortedSet[T]];
+  implicit def eqMap[S, T]: Equal[immutable.Map[S, T]] = allAreEqual[immutable.Map[S, T]];
+  implicit def eqSortedMap[S, T]: Equal[immutable.SortedMap[S, T]] = allAreEqual[immutable.SortedMap[S, T]];
 
   implicit def eqList[T](implicit eqT: Equal[T]): Equal[List[T]] = new Equal[List[T]] {
     def apply(x: List[T], y: List[T]) = (x, y) match {
@@ -151,8 +151,6 @@ object FormatTests extends Properties("Formats") {
       equal: Equal[T]
   ) = { property(name) = validFormat[T] }
 
-  implicit val arbitraryUnit = implicitly[Arbitrary[Unit]]
-
   implicit def arbitrarySortedMap[K, V](
       implicit
       ord: Ordering[K],
@@ -170,10 +168,10 @@ object FormatTests extends Properties("Formats") {
   ): Arbitrary[Array[T]] =
     Arbitrary(arbitrary[List[T]].map((x: List[T]) => x.toArray[T]));
 
-  def enum(names: Seq[String]): Enumeration = new Enumeration { names foreach (n => Value(n)) }
+  def enumeration(names: Seq[String]): Enumeration = new Enumeration { names foreach (n => Value(n)) }
 
   implicit val arbitraryEnumeration: Arbitrary[Enumeration] =
-    Arbitrary(arbitrary[List[String]].map(enum));
+    Arbitrary(arbitrary[List[String]].map(enumeration));
 
   implicit def orderedOption[T](opt: Option[T])(implicit ord: Ordering[T]): Ordered[Option[T]] =
     new Ordered[Option[T]] {
@@ -191,10 +189,10 @@ object FormatTests extends Properties("Formats") {
   case class Baz(override val toString: String) extends Foo;
   case class Bif(i: Int, j: Long) extends Foo;
 
-  implicit val eqFoo = allAreEqual[Foo]
+  implicit val eqFoo: Equal[Foo] = allAreEqual[Foo]
 
   implicit val BazFormat: Format[Baz] = viaString(Baz)
-  implicit val BifFormat: Format[Bif] = asProduct2(Bif)(Bif.unapply(_).get)
+  implicit val BifFormat: Format[Bif] = asProduct2(Bif)(x => (x.i, x.j))
   implicit val FooFormat: Format[Foo] = asUnion[Foo](Bar, classOf[Baz], classOf[Bif])
 
   implicit val arbitraryFoo: Arbitrary[Foo] = Arbitrary[Foo](
@@ -209,7 +207,7 @@ object FormatTests extends Properties("Formats") {
   case class Split(left: BinaryTree, right: BinaryTree) extends BinaryTree;
   case class Leaf() extends BinaryTree;
 
-  implicit val eqBinaryTree = allAreEqual[BinaryTree]
+  implicit val eqBinaryTree: Equal[BinaryTree] = allAreEqual[BinaryTree]
 
   implicit val BinaryTreeIsFormat: Format[BinaryTree] = lazyFormat({
     implicit val formatLeaf = asSingleton(Leaf());
@@ -236,9 +234,9 @@ object FormatTests extends Properties("Formats") {
     def items: List[Value] = Foo :: Bar :: Baz :: Nil
   }
 
-  implicit val SomeEnumFormat = enumerationFormat[SomeEnum.Value](SomeEnum)
-  implicit val SomeEnumEq = allAreEqual[SomeEnum.Value]
-  implicit val SomeEnumArb = Arbitrary[SomeEnum.Value](oneOf(SomeEnum.items))
+  implicit val SomeEnumFormat: Format[SomeEnum.Value] = enumerationFormat[SomeEnum.Value](SomeEnum)
+  implicit val SomeEnumEq: Equal[SomeEnum.Value] = allAreEqual[SomeEnum.Value]
+  implicit val SomeEnumArb: Arbitrary[SomeEnum.Value] = Arbitrary[SomeEnum.Value](oneOf(SomeEnum.items))
 
   formatSpec[Boolean]("Boolean");
   formatSpec[Byte]("Byte");

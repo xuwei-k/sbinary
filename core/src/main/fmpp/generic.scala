@@ -137,7 +137,7 @@ trait Generic extends CoreProtocol{
   implicit def classToSummand[T](clazz : Class[T])(implicit bin : Format[T]) : Summand[T] = Summand[T](clazz, bin);
   implicit def formatToSummand[T](format : Format[T])(implicit mf : scala.reflect.Manifest[T]) : Summand[T] = Summand[T](mf.runtimeClass, format);
   // This is a bit gross. 
-  implicit def anyToSummand[T](t : T) = Summand[T](t.asInstanceOf[AnyRef].getClass, asSingleton(t))
+  implicit def anyToSummand[T](t : T): Summand[T] = Summand[T](t.asInstanceOf[AnyRef].getClass, asSingleton(t))
 
   /**
    * Uses a single tag byte to represent S as a union of subtypes. 
