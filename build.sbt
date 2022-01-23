@@ -6,7 +6,6 @@ ThisBuild / homepage := Some(url("https://github.com/sbt/sbinary"))
 ThisBuild / version := "0.5.2-SNAPSHOT"
 ThisBuild / scalaVersion := scala212
 ThisBuild / crossScalaVersions := Seq(scala210, scala211, scala212, scala213, scala3)
-ThisBuild / bintrayPackage := "sbinary"
 ThisBuild / developers := List(
   Developer(
     "drmaciver",
@@ -22,6 +21,11 @@ ThisBuild / licenses := Seq("MIT" -> new URL("https://github.com/sbt/sbinary/blo
 ThisBuild / scmInfo := Some(
   ScmInfo(url("https://github.com/sbt/sbinary"), "git@github.com:sbt/sbinary.git")
 )
+ThisBuild / pomIncludeRepository := (_ => false) // drop repos other than Maven Central from POM
+ThisBuild / publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
 
 lazy val root = (project in file("."))
   .aggregate(core, treeExample)
