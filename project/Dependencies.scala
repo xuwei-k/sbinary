@@ -4,9 +4,9 @@ import Keys._
 object Dependencies {
   val scala210 = "2.10.7"
   val scala211 = "2.11.12"
-  val scala212 = "2.12.11"
-  val scala213 = "2.13.1"
-  val scala3 = "3.1.0"
+  val scala212 = "2.12.17"
+  val scala213 = "2.13.10"
+  val scala3 = "3.2.1"
 
   val scalacheck = Def.setting {
     scalaBinaryVersion.value match {
@@ -25,6 +25,6 @@ object Dependencies {
       case Some((2, 13)) =>
         List("org.scala-lang.modules" %% "scala-xml" % "1.2.0")
       case _ =>
-        List("org.scala-lang.modules" %% "scala-xml" % "2.0.1")
+        List(("org.scala-lang.modules" %% "scala-xml" % "2.1.0").cross(CrossVersion.for3Use2_13))
     }
 }
