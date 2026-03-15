@@ -17,7 +17,7 @@ ThisBuild / developers := List(
   Developer("eed3si9n", "Eugene Yokota", "@eed3si9n", url("https://github.com/eed3si9n"))
 )
 ThisBuild / description := "Library for describing binary formats for Scala types"
-ThisBuild / licenses := Seq("MIT" -> new URL("https://github.com/sbt/sbinary/blob/master/LICENSE"))
+ThisBuild / licenses := Seq("MIT" -> url("https://github.com/sbt/sbinary/blob/master/LICENSE"))
 ThisBuild / scmInfo := Some(
   ScmInfo(url("https://github.com/sbt/sbinary"), "git@github.com:sbt/sbinary.git")
 )

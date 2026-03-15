@@ -13,7 +13,7 @@ object Fmpp {
     libraryDependencies += "net.sourceforge.fmpp" % "fmpp" % "0.9.16" % FmppConfig,
     ivyConfigurations += FmppConfig,
     fmppOptions := "--ignore-temporary-files" :: Nil,
-    fullClasspath in FmppConfig := update.value select configurationFilter(FmppConfig.name) map Attributed.blank
+    FmppConfig / fullClasspath := update.value select configurationFilter(FmppConfig.name) map Attributed.blank
   )
 
   import sbt.io.Path._
@@ -22,13 +22,13 @@ object Fmpp {
       Seq(
         sourceGenerators += fmpp,
         fmpp := fmppTask.value,
-        mappings in packageSrc ++= managedSources.value pair relativeTo(sourceManaged.value)
+        packageSrc / mappings ++= managedSources.value pair relativeTo(sourceManaged.value)
       )
     )
   lazy val fmppTask =
     Def.task {
-      val cp = (fullClasspath in FmppConfig).value
-      val r = (runner in fmpp).value
+      val cp = (FmppConfig / fullClasspath).value
+      val r = (fmpp / runner).value
       val srcRoot = baseDirectory.value / "src" / "main" / "fmpp"
       val sources = (srcRoot ** "*.scala").get
       val output = sourceManaged.value
