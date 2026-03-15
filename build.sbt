@@ -5,7 +5,7 @@ ThisBuild / organizationHomepage := Some(url("http://scala-sbt.org/"))
 ThisBuild / homepage := Some(url("https://github.com/sbt/sbinary"))
 ThisBuild / version := "0.5.2-SNAPSHOT"
 ThisBuild / scalaVersion := scala212
-ThisBuild / crossScalaVersions := Seq(scala210, scala211, scala212, scala213, scala3)
+ThisBuild / crossScalaVersions := Seq(scala212, scala213, scala3)
 ThisBuild / developers := List(
   Developer(
     "drmaciver",
