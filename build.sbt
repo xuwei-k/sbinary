@@ -38,10 +38,6 @@ lazy val root = (project in file("."))
 lazy val core = (project in file("core"))
   .settings(nocomma {
     name := "SBinary"
-
-    mimaPreviousArtifacts := {
-      Set.empty
-    }
     libraryDependencies += scalacheck.value % Test
     libraryDependencies ++= scalaVersion(scalaXmlDep).value
     Compile / unmanagedSourceDirectories += {
@@ -55,9 +51,8 @@ lazy val core = (project in file("core"))
     }
     Compile / unmanagedResources += (baseDirectory map { _ / "LICENSE" }).value
     mimaPreviousArtifacts := {
-      val versions = Seq("0.5.0")
-      val crossVersion = if (crossPaths.value) CrossVersion.binary else CrossVersion.disabled
-      versions.map(v => organization.value % moduleName.value % v cross crossVersion).toSet
+      val versions = Seq("0.5.1")
+      versions.map(v => organization.value %% moduleName.value % v).toSet
     },
   })
   .settings(
