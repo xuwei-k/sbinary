@@ -20,7 +20,7 @@ jobs:
         distribution: adopt
     - uses: sbt/setup-sbt@v1
     - uses: coursier/cache-action@v6
-    - run: sbt "+scalafmtCheckAll" scalafmtSbtCheck mimaReportBinaryIssues "+test"
+    - run: sbt "+scalafmtCheckAll" scalafmtSbtCheck "+ mimaReportBinaryIssues" "+test"
     - name: cleanup
       shell: bash
       run: |
