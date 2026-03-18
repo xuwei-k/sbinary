@@ -3,7 +3,7 @@ package sbinary;
 import Operations._;
 
 trait StandardPrimitives extends CoreProtocol {
-  private def readUnsigned(in: Input) = in.readByte.toInt & 0xFF
+  private def readUnsigned(in: Input) = in.readByte.toInt & 0xff
 
   implicit object BooleanFormat extends Format[Boolean] {
     def reads(in: Input) = in.readByte != 0
@@ -13,8 +13,8 @@ trait StandardPrimitives extends CoreProtocol {
   implicit object CharFormat extends Format[Char] {
     def reads(in: Input) = ((readUnsigned(in) << 8) + readUnsigned(in)).toChar;
     def writes(out: Output, t: Char) = {
-      out.writeByte(((t >>> 8) & 0xFF).toByte);
-      out.writeByte(((t >>> 0) & 0xFF).toByte);
+      out.writeByte(((t >>> 8) & 0xff).toByte);
+      out.writeByte(((t >>> 0) & 0xff).toByte);
     }
   }
 
@@ -22,7 +22,7 @@ trait StandardPrimitives extends CoreProtocol {
     def reads(in: Input) = ((readUnsigned(in) << 8) + readUnsigned(in)).toShort
 
     def writes(out: Output, t: Short) = {
-      out.writeByte(((t >>> 8) & 0xFF).toByte);
+      out.writeByte(((t >>> 8) & 0xff).toByte);
       out.writeByte(t.toByte);
     }
   }
@@ -37,10 +37,10 @@ trait StandardPrimitives extends CoreProtocol {
     }
 
     def writes(out: Output, t: Int): Unit = {
-      out.writeByte(((t >>> 24) & 0xFF).toByte);
-      out.writeByte(((t >>> 16) & 0xFF).toByte);
-      out.writeByte(((t >>> 8) & 0xFF).toByte);
-      out.writeByte(((t >>> 0) & 0xFF).toByte);
+      out.writeByte(((t >>> 24) & 0xff).toByte);
+      out.writeByte(((t >>> 16) & 0xff).toByte);
+      out.writeByte(((t >>> 8) & 0xff).toByte);
+      out.writeByte(((t >>> 0) & 0xff).toByte);
     }
   }
 
@@ -78,7 +78,7 @@ trait StandardPrimitives extends CoreProtocol {
 }
 
 trait JavaUTF extends CoreProtocol {
-  private[this] def readUnsignedByte(in: Input): Int = in.readByte.toInt & 0xFF
+  private[this] def readUnsignedByte(in: Input): Int = in.readByte.toInt & 0xff
   private[this] def readUnsignedShort(in: Input): Int =
     (readUnsignedByte(in) << 8) + readUnsignedByte(in)
 
@@ -116,7 +116,7 @@ trait JavaUTF extends CoreProtocol {
       }
 
       while (count < utflen) {
-        c = bbuffer(count).toInt & 0xFF
+        c = bbuffer(count).toInt & 0xff
         cbuffer(charCount) = ((c >> 4) match {
           case 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 => {
             count += 1;
@@ -127,17 +127,17 @@ trait JavaUTF extends CoreProtocol {
             if (count > utflen) partial;
 
             char2 = bbuffer(count - 1)
-            if ((char2 & 0xC0) != 0x80) malformed(count);
-            (((c & 0x1F) << 6) | (char2 & 0x3F));
+            if ((char2 & 0xc0) != 0x80) malformed(count);
+            (((c & 0x1f) << 6) | (char2 & 0x3f));
           }
           case 14 => {
             count += 3;
             char2 = bbuffer(count - 2);
             char3 = bbuffer(count - 1);
-            if (((char2 & 0xC0) != 0x80) || ((char3 & 0xC0) != 0x80))
+            if (((char2 & 0xc0) != 0x80) || ((char3 & 0xc0) != 0x80))
               malformed(count - 1);
 
-            ((c & 0x0F).toInt << 12) | ((char2 & 0x3F).toInt << 6) | ((char3 & 0x3F).toInt << 0);
+            ((c & 0x0f).toInt << 12) | ((char2 & 0x3f).toInt << 6) | ((char3 & 0x3f).toInt << 0);
           }
           case _ => malformed(count);
         }).toChar
@@ -155,8 +155,8 @@ trait JavaUTF extends CoreProtocol {
 
       while (i < value.length) {
         utflen += (
-          if ((c >= 0x0001) && (c <= 0x007F)) 1
-          else if (c > 0x07FF) 3
+          if ((c >= 0x0001) && (c <= 0x007f)) 1
+          else if (c > 0x07ff) 3
           else 2
         )
         i += 1;
@@ -172,26 +172,26 @@ trait JavaUTF extends CoreProtocol {
         count += 1;
       }
 
-      append((utflen >>> 8) & 0xFF)
-      append(utflen & 0xFF)
+      append((utflen >>> 8) & 0xff)
+      append(utflen & 0xff)
 
       i = 0;
-      while ((i < value.length) && ((c >= 0x0001) && (c <= 0x007F))) {
+      while ((i < value.length) && ((c >= 0x0001) && (c <= 0x007f))) {
         bbuffer(count) = c.toByte;
         count += 1;
         i += 1;
       }
 
       while (i < value.length) {
-        if ((c >= 0x0001) && (c <= 0x007F)) {
+        if ((c >= 0x0001) && (c <= 0x007f)) {
           append(c);
-        } else if (c > 0x07FF) {
-          append(0xE0 | ((c >> 12) & 0x0F));
-          append(0x80 | ((c >> 6) & 0x3F));
-          append(0x80 | ((c >> 0) & 0x3F));
+        } else if (c > 0x07ff) {
+          append(0xe0 | ((c >> 12) & 0x0f));
+          append(0x80 | ((c >> 6) & 0x3f));
+          append(0x80 | ((c >> 0) & 0x3f));
         } else {
-          append(0xC0 | ((c >> 6) & 0x1F));
-          append(0x80 | ((c >> 0) & 0x3F));
+          append(0xc0 | ((c >> 6) & 0x1f));
+          append(0x80 | ((c >> 0) & 0x3f));
         }
 
         i += 1;

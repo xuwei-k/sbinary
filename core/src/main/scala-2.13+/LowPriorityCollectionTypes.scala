@@ -3,8 +3,8 @@ package sbinary
 import scala.collection.Factory
 
 trait LowPriorityCollectionTypes extends Generic {
-  def canBuildFormat[CC[X] <: Iterable[X], T](
-      implicit bin: Format[T],
+  def canBuildFormat[CC[X] <: Iterable[X], T](implicit
+      bin: Format[T],
       cbf: Factory[T, CC[T]]
   ): Format[CC[T]] =
     new LengthEncoded[CC[T], T] {
