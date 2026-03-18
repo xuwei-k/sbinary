@@ -16,6 +16,6 @@ object Dependencies {
       case Some((2, 13)) =>
         List("org.scala-lang.modules" %% "scala-xml" % "1.2.0")
       case _ =>
-        List(("org.scala-lang.modules" %% "scala-xml" % "2.1.0").cross(CrossVersion.for3Use2_13))
+        List("org.scala-lang.modules" %% "scala-xml" % "2.1.0")
     }
 }
