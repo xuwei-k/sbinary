@@ -3,7 +3,9 @@ import Keys._
 
 object Fmpp {
 
-  /*** Templating **/
+  /**
+   * * Templating *
+   */
   lazy val fmpp = TaskKey[Seq[File]]("fmpp")
   lazy val fmppOptions = SettingKey[Seq[String]]("fmpp-options")
   lazy val FmppConfig = config("fmpp") hide
@@ -13,11 +15,13 @@ object Fmpp {
     libraryDependencies += "net.sourceforge.fmpp" % "fmpp" % "0.9.16" % FmppConfig,
     ivyConfigurations += FmppConfig,
     fmppOptions := "--ignore-temporary-files" :: Nil,
-    FmppConfig / fullClasspath := update.value select configurationFilter(FmppConfig.name) map Attributed.blank
+    FmppConfig / fullClasspath := update.value select configurationFilter(
+      FmppConfig.name
+    ) map Attributed.blank
   )
 
   import sbt.io.Path._
-  def fmppConfig(c: Configuration): Seq[Setting[_]] =
+  def fmppConfig(c: Configuration): Seq[Setting[?]] =
     inConfig(c)(
       Seq(
         sourceGenerators += fmpp,
@@ -35,7 +39,8 @@ object Fmpp {
       val args = fmppOptions.value
       val s = streams.value
       IO.delete(output)
-      val arguments = "-U" +: "all" +: "-S" +: srcRoot.getAbsolutePath +: "-O" +: output.getAbsolutePath +: (args ++ sources.getPaths)
+      val arguments =
+        "-U" +: "all" +: "-S" +: srcRoot.getAbsolutePath +: "-O" +: output.getAbsolutePath +: (args ++ sources.getPaths)
       r.run("fmpp.tools.CommandLine", cp.files, arguments, s.log) // .foreach(sys.error)
       (output ** "*.scala").get
     }

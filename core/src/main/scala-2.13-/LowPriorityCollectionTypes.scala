@@ -3,8 +3,8 @@ package sbinary
 import scala.collection.generic.CanBuildFrom
 
 trait LowPriorityCollectionTypes extends Generic {
-  def canBuildFormat[CC[X] <: Traversable[X], T](
-      implicit bin: Format[T],
+  def canBuildFormat[CC[X] <: Traversable[X], T](implicit
+      bin: Format[T],
       cbf: CanBuildFrom[Nothing, T, CC[T]]
   ): Format[CC[T]] =
     new LengthEncoded[CC[T], T] {

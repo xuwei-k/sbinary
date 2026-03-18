@@ -5,12 +5,12 @@ object HouseRulesPlugin extends AutoPlugin {
   override def requires = plugins.JvmPlugin
   override def trigger = allRequirements
 
-  override def buildSettings: Seq[Def.Setting[_]] = baseBuildSettings
-  override def projectSettings: Seq[Def.Setting[_]] = baseSettings
+  override def buildSettings: Seq[Def.Setting[?]] = baseBuildSettings
+  override def projectSettings: Seq[Def.Setting[?]] = baseSettings
 
-  lazy val baseBuildSettings: Seq[Def.Setting[_]] = Seq()
+  lazy val baseBuildSettings: Seq[Def.Setting[?]] = Seq()
 
-  lazy val baseSettings: Seq[Def.Setting[_]] = Seq(
+  lazy val baseSettings: Seq[Def.Setting[?]] = Seq(
     scalacOptions ++= Seq("-encoding", "utf8"),
     scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint"),
     scalacOptions += "-language:higherKinds",
@@ -31,8 +31,8 @@ object HouseRulesPlugin extends AutoPlugin {
     scalacOptions += "-Ywarn-numeric-widen",
     scalacOptions += "-Ywarn-value-discard",
     scalacOptions ++= "-Ywarn-unused-import".ifScala(v => 11 <= v && v <= 12).value.toList
-  ) ++ Seq(Compile, Test).flatMap(
-    c => c / console / scalacOptions --= Seq("-Ywarn-unused-import", "-Xlint")
+  ) ++ Seq(Compile, Test).flatMap(c =>
+    c / console / scalacOptions --= Seq("-Ywarn-unused-import", "-Xlint")
   )
 
   private def scalaPartV = Def setting (CrossVersion partialVersion scalaVersion.value)

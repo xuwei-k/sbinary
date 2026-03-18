@@ -45,8 +45,7 @@ object Equal {
     }
   }
 
-  implicit def eqTuple3[S, T, U](
-      implicit
+  implicit def eqTuple3[S, T, U](implicit
       eqS: Equal[S],
       eqT: Equal[T],
       eqU: Equal[U]
@@ -78,8 +77,7 @@ import Equal._;
 object CompatTests extends Properties("CompatTests") {
   import java.io._;
 
-  def compatFor[T](name: String, readJ: DataInput => T, writeJ: (DataOutput, T) => Unit)(
-      implicit
+  def compatFor[T](name: String, readJ: DataInput => T, writeJ: (DataOutput, T) => Unit)(implicit
       fmt: Format[T],
       arb: Arbitrary[T]
   ) = {
@@ -130,30 +128,26 @@ object LazyIOTests extends Properties("LazyIO") {
 }
 
 object FormatTests extends Properties("Formats") {
-  def validFormat[T](
-      implicit
+  def validFormat[T](implicit
       bin: Format[T],
       arb: Arbitrary[T],
       equal: Equal[T]
   ) =
-    forAll(
-      (x: T) =>
-        try {
-          equal(x, fromByteArray[T](toByteArray(x)))
-        } catch {
-          case (e: Throwable) => e.printStackTrace; false
-        }
+    forAll((x: T) =>
+      try {
+        equal(x, fromByteArray[T](toByteArray(x)))
+      } catch {
+        case (e: Throwable) => e.printStackTrace; false
+      }
     )
 
-  def formatSpec[T](name: String)(
-      implicit
+  def formatSpec[T](name: String)(implicit
       bin: Format[T],
       arb: Arbitrary[T],
       equal: Equal[T]
   ) = { property(name) = validFormat[T] }
 
-  implicit def arbitrarySortedMap[K, V](
-      implicit
+  implicit def arbitrarySortedMap[K, V](implicit
       ord: Ordering[K],
       arbK: Arbitrary[K],
       arbV: Arbitrary[V]
@@ -161,9 +155,8 @@ object FormatTests extends Properties("Formats") {
     Arbitrary(arbitrary[List[(K, V)]].map(x => immutable.TreeMap(x: _*)))
   }
 
-  //implicit def arbitrarySet[T](implicit arb : Arbitrary[T]) : Arbitrary[immutable.Set[T]] = Arbitrary(arbitrary[List[T]].map((x : List[T]) => immutable.Set(x :_*)));
-  implicit def arbitraryArray[T](
-      implicit
+  // implicit def arbitrarySet[T](implicit arb : Arbitrary[T]) : Arbitrary[immutable.Set[T]] = Arbitrary(arbitrary[List[T]].map((x : List[T]) => immutable.Set(x :_*)));
+  implicit def arbitraryArray[T](implicit
       arb: Arbitrary[T],
       mf: scala.reflect.Manifest[T]
   ): Arbitrary[Array[T]] =

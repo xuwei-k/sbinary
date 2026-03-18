@@ -69,7 +69,7 @@ lazy val treeExample = (project in (file("examples") / "bt"))
   })
   .settings(relaxOldScala)
 
-def relaxOldScala: Seq[Setting[_]] = Seq(
+def relaxOldScala: Seq[Setting[?]] = Seq(
   scalacOptions := {
     val old = scalacOptions.value
     CrossVersion.partialVersion(scalaVersion.value) match {
